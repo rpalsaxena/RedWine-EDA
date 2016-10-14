@@ -1,0 +1,8 @@
+Udacity discussion forum
+https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+http://tex.stackexchange.com/questions/152488/suppress-library-comments-from-ouput-with-knitr
+http://stackoverflow.com/questions/34774120/set-number-of-bins-for-histogram-directly-in-ggplot
+http://docs.ggplot2.org/current/scale_brewer.html
+http://stackoverflow.com/questions/20943317/how-to-find-out-whether-a-variable-is-a-factor-or-continuous-in-r
+http://stackoverflow.com/questions/22282531/how-to-compute-correlations-between-all-columns-in-r-and-detect-highly-correlate
+http://www.sthda.com/english/wiki/visualize-correlation-matrix-using-correlogram
