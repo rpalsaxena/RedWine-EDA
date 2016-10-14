@@ -1,5 +1,7 @@
 # Red Wine Exploratory Data Analysis
 
+Data is available at this [link](https://s3.amazonaws.com/udacity-hosted-downloads/ud651/wineQualityReds.csv)
+
 You can check rmd file using this [link](https://github.com/rpalsaxena/RedWine-EDA/blob/master/Red_wine_Analysis_Rahul_Saxena.Rmd)
 
 HTML file of EDA is available at this [link](https://github.com/rpalsaxena/RedWine-EDA/blob/master/Red_wine_Analysis_Rahul_Saxena.html)
