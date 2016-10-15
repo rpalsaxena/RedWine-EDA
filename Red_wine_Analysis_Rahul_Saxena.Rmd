@@ -377,40 +377,48 @@ From correlation graph, we can see that fixed acidity is correlated with volatil
 
 So, lets try to plot distribution to understand relation of these variables with quality of wines.
 
-
 Here, we are plotting scatterplot of *fixed acidity* with other 4 metrics(volatile acidity, citric acid, pH, density).
 
 ```{r echo=FALSE, warning=F}
-#scatterplot volatile acidity vs fixed acidity vs quality
-ggplot(aes(x = red_wine_ds$volatile.acidity , y = red_wine_ds$fixed.acidity,
-  color = as.factor(quality)), data = red_wine_ds)+
+#ScatterPlot reusable function
+scatterplot <- function(xvar, yvar, colvar, xlabel, ylabel, dot_col, brew_name)
+  {
+  ggplot(aes(x = xvar, y = yvar, color = colvar), data = red_wine_ds)+
+  xlab(xlabel)+
+  ylab(ylabel)+
   geom_point()+
-  geom_smooth()+
-  scale_color_brewer("quality", palette = 'Blues')
+  geom_smooth(method = "lm", se = FALSE)+
+  scale_color_brewer(brew_name, palette = dot_col)+
+  theme(panel.background = element_rect(fill = '#666666', colour = 'black'),
+  panel.grid.major = element_line(colour = "black"),
+  panel.grid.minor = element_line(colour = "black"),
+  legend.key = element_rect(fill = '#666666'))
+}
+
+#scatterplot volatile acidity vs fixed acidity vs quality
+scatterplot(red_wine_ds$volatile.acidity, red_wine_ds$fixed.acidity,
+  as.factor(red_wine_ds$quality), 'Volatile Acidity',
+  'Fixed Acidity', 'Blues', 'quality')
 
 #scatterplot citric acid vs fixed acidity vs quality
-ggplot(aes(x = red_wine_ds$citric.acid, y = red_wine_ds$fixed.acidity,
-  color = as.factor(quality)), data = red_wine_ds)+
-  geom_point()+
-  geom_smooth()+
-  scale_color_brewer("quality", palette = 'Blues')
+scatterplot(red_wine_ds$citric.acid, red_wine_ds$fixed.acidity,
+  as.factor(red_wine_ds$quality), 'Citric Acid',
+  'Fixed Acidity', 'Blues', 'quality')
 
-#scatterplot density vs density vs quality
-ggplot(aes(x = red_wine_ds$density , y = red_wine_ds$fixed.acidity,
-  color = as.factor(quality)), data = red_wine_ds)+
-  geom_point()+
-  geom_smooth()+
-  scale_color_brewer("quality", palette = 'Blues')
+#scatterplot density vs fixed acidity vs quality
+scatterplot(red_wine_ds$density, red_wine_ds$fixed.acidity,
+  as.factor(red_wine_ds$quality), 'Density',
+  'Fixed Acidity', 'Blues', 'quality')
 
 #scatterplot pH vs fixed acidity vs quality
-ggplot(aes(x = red_wine_ds$pH , y = red_wine_ds$fixed.acidity,
-  color = as.factor(quality)), data = red_wine_ds)+
-  geom_point()+
-  geom_smooth()+
-  scale_color_brewer("quality", palette = 'Blues')
+scatterplot(red_wine_ds$pH, red_wine_ds$fixed.acidity,
+  as.factor(red_wine_ds$quality), 'pH',
+  'Fixed Acidity', 'Blues', 'quality')
+
 ```
 
-From these graph correlation of x-axis with y-axis is visible but their relationship with quality of wine is not visible. 
+From these graphs, correlation of x-axis with y-axis is visible due to straight line behaviour but their relationship with quality of wine is not visible. 
+Line with quality 3,4,5 etc lies over
 
 These 4 plots leads us to no good result. 
 
@@ -452,28 +460,20 @@ Here we are plotting alchol vs qualtiy vs sulphates/ citric acid/ volatile acidi
 
 ```{r echo=FALSE, warning=F}
 #scatter plot of quality vs alcohol vs sulphates.bucket
-ggplot( aes(x = quality, y = alcohol, color = sulphates.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("sulphates", palette = 'Greens')
+scatterplot(red_wine_ds$quality, red_wine_ds$alcohol,
+  red_wine_ds$sulphates.bucket, 'Quality', 'Alcohol %', 'Greens',
+  'sulphates')+ geom_jitter()
 
 #scatter plot of quality vs alcohol vs sulphates.bucket
-ggplot( aes(y = alcohol, x = quality, color = citric.acid.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("citric.acid", palette = 'Greens')
+scatterplot(red_wine_ds$quality, red_wine_ds$alcohol,
+  red_wine_ds$citric.acid.bucket, 'Quality', 'Alcohol %', 'Greens',
+  'citric.acid.bucket')+ geom_jitter()
 
 #scatter plot of quality vs alcohol vs volatile.acidity.bucket
-ggplot(aes( y = alcohol, x = quality, color = volatile.acidity.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("volatile.acidity", palette = 'Greens')
+scatterplot(red_wine_ds$quality, red_wine_ds$alcohol,
+  red_wine_ds$volatile.acidity.bucket, 'Quality', 'Alcohol %', 'Greens',
+  'volatile.acidity.bucket')+ geom_jitter()
+
 ```
 
 These plots show that:
@@ -488,26 +488,17 @@ These plots show that:
 We are plotting volatile acidity vs qualtiy vs sulphates/ citric acid/ alcohol buckets. We are using jitter in the plot to reduce overplotting and geom_smooth to add a smoothed mean.
 
 ```{r echo=FALSE, warning=F}
-ggplot( aes(x = quality, y = volatile.acidity, color = alcohol.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("alcohol", palette = 'Reds')
+scatterplot(red_wine_ds$quality, red_wine_ds$volatile.acidity,
+  red_wine_ds$alcohol.bucket, 'Quality', 'Volatile Acidity', 'Reds',
+  'alcohol')+ geom_jitter()
 
-ggplot( aes(x = quality, y = volatile.acidity, color = citric.acid.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("citric.acid", palette = 'Reds')
+scatterplot(red_wine_ds$quality, red_wine_ds$volatile.acidity,
+  red_wine_ds$citric.acid.bucket, 'Quality', 'Volatile Acidity', 'Reds',
+  'Citric Acid')+ geom_jitter()
 
-ggplot( aes(x = quality, y = volatile.acidity, color=sulphates.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("sulphates", palette = 'Reds')
+scatterplot(red_wine_ds$quality, red_wine_ds$volatile.acidity,
+  red_wine_ds$sulphates.bucket, 'Quality', 'Volatile Acidity', 'Reds',
+  'sulphates.bucket')+ geom_jitter()
 
 ```
 
@@ -521,26 +512,17 @@ These plots show that:
 We are plotting citric acid vs qualtiy vs sulphates/ citric acid/ volatile acidity buckets. We are using jitter in the plot to reduce overplotting and geom_smooth to add a smoothed mean.
 
 ```{r echo=FALSE, warning=F}
-ggplot( aes(x = quality,  y = citric.acid, color=alcohol.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("alcohol", palette = 'Greys')
+scatterplot(red_wine_ds$quality, red_wine_ds$citric.acid,
+  red_wine_ds$alcohol.bucket, 'Quality', 'citric.acid', 'BuPu',
+  'alcohol.bucket')+ geom_jitter()
 
-ggplot( aes(x = quality,y = citric.acid, color = volatile.acidity.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("volatile.acidity", palette = 'Greys')
+scatterplot(red_wine_ds$quality, red_wine_ds$citric.acid,
+  red_wine_ds$volatile.acidity.bucket, 'Quality', 'citric.acid', 'BuPu',
+  'volatile.acidity.bucket')+ geom_jitter()
 
-ggplot( aes(x = quality, y = citric.acid, color = sulphates.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("sulphates", palette = 'Greys')
+scatterplot(red_wine_ds$quality, red_wine_ds$citric.acid,
+  red_wine_ds$sulphates.bucket, 'Quality', 'citric.acid', 'BuPu',
+  'sulphates.bucket')+ geom_jitter()
 
 ```
 
@@ -552,26 +534,18 @@ These plots shows no such good influence of citric acid with other properties on
 We are plotting sulphates vs qualtiy vs volatile acidity/ citric acid/ alcohol buckets. We are using jitter in the plot to reduce overplotting and geom_smooth to add a smoothed mean.
 
 ```{r echo=FALSE, warning=F}
-ggplot( aes(x = quality, y = sulphates, color = alcohol.bucket),
-  data = red_wine_ds)+
-  geom_point()+ 
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("alcohol", palette = 'Purples')
+scatterplot(red_wine_ds$quality, red_wine_ds$sulphates,
+  red_wine_ds$alcohol.bucket, 'Quality', 'sulphates', 'Purples',
+  'alcohol.bucket')+ geom_jitter()
 
-ggplot( aes(x = quality, y = sulphates, color = volatile.acidity.bucket),
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("volatile.acidity", palette = 'Purples')
+scatterplot(red_wine_ds$quality, red_wine_ds$sulphates,
+  red_wine_ds$volatile.acidity.bucket, 'Quality', 'sulphates', 'Purples',
+  'volatile.acidity.bucket')+ geom_jitter()
 
-ggplot(aes(x = quality, y=sulphates, color=citric.acid.bucket), 
-  data = red_wine_ds)+
-  geom_point()+
-  geom_jitter()+
-  geom_smooth(method = "lm")+
-  scale_color_brewer("citric.acid", palette = 'Purples')
+scatterplot(red_wine_ds$quality, red_wine_ds$sulphates,
+  red_wine_ds$citric.acid.bucket, 'Quality', 'sulphates', 'Purples',
+  'citric.acid.bucket')+ geom_jitter()
+
 ```
 
 These plots show that:
@@ -621,12 +595,16 @@ ggplot(aes( y = alcohol, x = quality, color = volatile.acidity.bucket),
   data = red_wine_ds)+
   geom_point()+
   geom_jitter()+
-  geom_smooth(method = "lm")+
+  geom_smooth(method = "lm", se = FALSE)+
   scale_x_continuous(breaks = seq(1, 10, 1))+
   scale_color_brewer("volatile.acidity (g / dm^3)", palette = 'Blues')+
   xlab("Wine Quality")+
   ylab("alcohol (% by volume)")+
-  labs(title = "Distribution of Alcohol % vs Volatile Acidity with quality")
+  labs(title = "Distribution of Alcohol % vs Volatile Acidity with quality")+
+  theme(panel.background = element_rect(fill = '#666666', colour = 'black'),
+  panel.grid.major = element_line(colour = "black"),
+  panel.grid.minor = element_line(colour = "black"),
+  legend.key = element_rect(fill = '#666666'))
 
 ```
 
@@ -645,12 +623,17 @@ ggplot( aes(x = quality, y = alcohol, color = sulphates.bucket),
   data = red_wine_ds)+
   geom_point()+
   geom_jitter()+
-  geom_smooth(method = "lm")+
+  geom_smooth(method = "lm", se = FALSE)+
   scale_color_brewer("sulphates(g / dm3)", palette = 'Blues')+
   scale_x_continuous(breaks = seq(1, 10, 1))+
   xlab("Wine Quality")+
   ylab("alcohol (% by volume)")+
-  labs(title = "Distribution of Alcohol % vs sulphates with quality")
+  labs(title = "Distribution of Alcohol % vs sulphates with quality")+
+  theme(panel.background = element_rect(fill = '#666666', colour = 'black'),
+  panel.grid.major = element_line(colour = "black"),
+  panel.grid.minor = element_line(colour = "black"),
+  legend.key = element_rect(fill = '#666666'))
+
 
 ```
 
